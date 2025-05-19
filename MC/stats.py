@@ -174,7 +174,7 @@ class Stats:
     
     def plot_time_series(self, key: str, title: Optional[str] = None, 
                         xlabel: str = 'Time', ylabel: Optional[str] = None,
-                        show: bool = True, save_path: Optional[str] = None) -> None:
+                        show: bool = True, save_path: Optional[str] = None, ) -> None:
         """绘制时间序列图表"""
         series = self.get_time_series(key)
         if not series:

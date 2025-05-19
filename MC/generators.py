@@ -3,7 +3,7 @@ import uuid
 import random
 import abc
 
-from events import Event
+from .events import Event
 
 
 class EventGenerator(abc.ABC):

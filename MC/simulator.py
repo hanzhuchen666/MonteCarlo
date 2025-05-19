@@ -1,12 +1,12 @@
 from typing import List, Dict, Any, Optional, Callable
 import time
 
-from parameters import ParameterSet
-from events import Event
-from generators import EventGenerator
-from handlers import EventHandler, EventDispatcher
-from timeline import TimeLine
-from stats import Stats, ConsoleStatsObserver
+from .parameters import ParameterSet
+from .events import Event
+from .generators import EventGenerator
+from .handlers import EventHandler, EventDispatcher
+from .timeline import TimeLine
+from .stats import Stats, ConsoleStatsObserver
 
 
 class Simulator:
@@ -132,9 +132,6 @@ class Simulator:
                 else:
                     if self.verbose:
                         print(f"警告: 事件 {new_event.event_type} 被安排在过去的时间 {new_event.time}，当前时间为 {self.timeline.current_time}")
-            
-            # 生成来自生成器的新事件
-            self._generate_new_events()
         
         end_time = time.time()
         elapsed = end_time - start_time

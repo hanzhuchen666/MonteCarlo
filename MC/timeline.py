@@ -1,6 +1,6 @@
 from typing import List, Optional, Dict, Any, Callable
 import heapq
-from events import Event
+from .events import Event
 
 
 class TimeLine:

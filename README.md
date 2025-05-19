@@ -209,3 +209,52 @@ stats.add_observer(observer)
 ## 许可证
 
 [MIT License](LICENSE) 
+
+# 文档
+
+## Events
+
+标识仿真中的一次事件
+- time: float
+- event_type: str
+
+## Generator
+
+### EventGenerator(ABC)
+
+- generate
+- generate_next_time
+
+## Handler
+
+### EventHandler(ABC)
+
+- can_handle
+- handle (pre_handle->process_event->post_handle)->new_events
+- pre_handle
+- process_event @abc.abstractmethod
+- post_handle
+
+### EventDispatcher
+
+- self.handlers: Dict[str, List[EventHandler]] = {}  # 按事件类型索引的处理器
+- self.default_handlers: List[EventHandler] = []  # 处理所有事件类型的处理器
+- register_handler
+- dispatch
+
+### LoggingEventHandler
+### StatsCollectingHandler
+### ChainHandler
+### ConditionalHandler
+
+## Parameters
+
+### Parameter
+- name:str
+- value:Any
+- validator:callable=None
+- description:str=""
+- set_value
+- get_value
+### ParameterSet
+### ParameterBulder

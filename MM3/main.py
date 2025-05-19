@@ -1,5 +1,5 @@
 """
-示例：排队系统仿真
+示例：M/M/3 排队系统仿真
 
 本示例模拟一个简单的队列系统（如银行柜台服务），包含：
 1. 客户到达（泊松过程）
@@ -16,13 +16,17 @@
 import random
 from typing import List, Set, Dict, Any
 
-from parameters import ParameterBuilder
-from events import Event
-from generators import PoissonEventGenerator
-from handlers import EventHandler
-from timeline import TimeLine
-from stats import Stats
-from simulator import Simulator
+from MC.parameters import ParameterBuilder
+from MC.events import Event
+from MC.generators import PoissonEventGenerator
+from MC.handlers import EventHandler
+from MC.timeline import TimeLine
+from MC.stats import Stats
+from MC.simulator import Simulator
+
+import matplotlib.pyplot as plt
+plt.rcParams['font.sans-serif'] = ['SimHei']  # 设置中文显示
+plt.rcParams['axes.unicode_minus'] = False  # 设置负号显示
 
 
 # 定义事件类型
@@ -68,11 +72,12 @@ class QueueSystem:
 class ArrivalHandler(EventHandler):
     """处理客户到达事件"""
     
-    def __init__(self, queue_system: QueueSystem, service_time_generator, handler_id: str = None):
+    def __init__(self, queue_system: QueueSystem, service_time_generator, arrival_generator: PoissonEventGenerator, handler_id: str = None):
         super().__init__(handler_id)
         self.event_types = {EVENT_ARRIVAL}
         self.queue_system = queue_system
         self.service_time_generator = service_time_generator
+        self.arrival_generator = arrival_generator
     
     def process_event(self, event: Event, timeline, stats) -> List[Event]:
         """处理客户到达"""
@@ -84,6 +89,11 @@ class ArrivalHandler(EventHandler):
         event.add_payload("arrival_time", arrival_time)
         
         new_events = []
+        
+        # 生成下一个到达事件
+        next_arrival = self.arrival_generator.generate(timeline.current_time)
+        if next_arrival:
+            new_events.append(next_arrival)
         
         # 如果有空闲服务台，直接开始服务
         if self.queue_system.is_server_available:
@@ -229,7 +239,7 @@ def run_queue_simulation(arrival_rate: float, service_rate: float,
     )
     
     # 创建事件处理器
-    arrival_handler = ArrivalHandler(queue_system, generate_service_time)
+    arrival_handler = ArrivalHandler(queue_system, generate_service_time, arrival_generator)
     service_end_handler = ServiceEndHandler(queue_system, generate_service_time)
     
     # 创建并配置模拟器

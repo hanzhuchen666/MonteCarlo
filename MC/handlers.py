@@ -1,6 +1,6 @@
 from typing import List, Dict, Optional, Any, Set, Callable
 import abc
-from events import Event
+from .events import Event
 
 
 class EventHandler(abc.ABC):
